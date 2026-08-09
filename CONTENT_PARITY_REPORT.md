@@ -4,46 +4,40 @@ Source URL: https://switchtodevops.com/
 
 Implementation reviewed: `app/page.jsx`
 
-## Section Parity
+## Urgent Rebuild Content Checks
 
-| Section | Source Text | Implemented | Match |
-| --- | --- | --- | --- |
-| Top contact / brand / navigation | Live homepage phone, brand and nav labels | Present | YES |
-| Hero | Live headline, batch notice, stats, CTAs and supporting copy | Present | YES |
-| Employer/salary marquee | Live employer names and salary strings | Present | YES |
-| Statistics | Live placement/statistic group | Present | YES |
-| Why Choose Us | Four live benefit items and descriptions | Present | YES |
-| Curriculum | Ten live curriculum modules, durations and bullets | Present | YES |
-| Projects | Five live project blocks, categories, descriptions and tool strings | Present | YES |
-| Tools | Sixteen live tool names | Present | YES |
-| Industry-ready / trainer intro | Live section text and CTAs | Present | YES |
-| Trainer proof | Live trainer name, role, company/experience and details | Present | YES |
-| How It Works | Four live process blocks and CTAs | Present | YES |
-| Career Paths | Five live career path blocks and salary ranges | Present | YES |
-| Testimonials | Two live testimonial blocks | Present | YES |
-| Student Transformations | Six live student result cards | Present | YES |
-| Pricing | Three live pricing packages and benefits | Present | YES |
-| Demo / form | Live demo copy, field labels, CTA and employer list | Present | YES |
-| FAQ | Ten live FAQ questions and complete answers | Present | YES |
-| Resources | Live location, career guide and learning-resource entries | Present | YES |
-| Blog teasers | Six live blog teaser cards | Present | YES |
-| Footer / legal / contact | Live footer, legal, business information and CTA | Present | YES |
+| Required Content | Implemented | Match |
+| --- | --- | --- |
+| Live hero heading and supporting copy | Present | YES |
+| Live hero CTAs: `Book Free Demo`, `View Curriculum` | Present | YES |
+| Stats: `500+ Students Trained` | Present | YES |
+| Stats: `Up to 85% Placement Rate` | Present | YES |
+| Stats: `12-16 LPA Avg Package` | Present | YES |
+| Stats: `Max 10 Students/Batch` | Present | YES |
+| Stats: `6+ Years Industry Experience` | Present | YES |
+| Trainer: `Firoz Ahmed` | Present | YES |
+| Trainer: `AWS DevOps Engineer at TCS` | Present | YES |
+| Trainer: `6+ years experience` | Present | YES |
+| Trainer: `deployed 38 Java microservices across multi-region AWS` | Present | YES |
+| Trainer: `expertise in EKS, ArgoCD, Terraform, Aurora MySQL, MSK Kafka` | Present | YES |
+| Real curriculum modules listed in urgent brief | Present | YES |
+| Real project titles/descriptions/tool strings from live source | Present | YES |
+| Tools from live source | Present | YES |
+| Real testimonial names listed in urgent brief | Present | YES |
+| Real cities listed in urgent brief | Present | YES |
+| Watermark text: `Working Concept — Saradhi Tech` | Present, fixed-position | YES |
 
-## Required Checks
+## Removed From Rebuild
 
-- Every live homepage section is represented: YES
-- Every required visible text block is present: YES
-- Exact wording intentionally preserved: YES
-- No live content silently removed: YES
-- No number/stat intentionally changed: YES
-- No testimonial invented: YES
-- No student/company invented: YES
-- No trainer credential invented: YES
-- No pricing changed: YES
-- No FAQ shortened: YES
-- No navigation item invented: YES
-- No CTA label invented: YES
-- No business claim came from the design image: YES
-- No business content came from another site/page: YES
-- Source inconsistencies listed in `CONTENT_ISSUES.md`: YES
-- Design reference used only for presentation: YES
+- Design-only hero copy `CODE IT. DEPLOY IT. OWN IT.` was not deployed after user confirmed live homepage hero copy should win.
+- Design-only sample stats such as `25K+`, `93%`, `500+ Hiring Partners`, and `4.8/5` are not present.
+- Previous fabricated salary ticker content is not present.
+- Previous fabricated L1/L2/L3 pricing tiers are not present.
+
+## QA Checks
+
+- No empty/broken project cards: YES
+- Project architecture diagram renders: YES
+- No horizontal overflow at 390, 768, 1024, 1440 widths: YES
+- Watermark is fixed-position and not in document flow: YES
+- Production build succeeds: YES
