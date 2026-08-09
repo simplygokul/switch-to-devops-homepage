@@ -21,6 +21,7 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; background: var(--paper); color: var(--text); overflow-x: hidden; }
+main#home { scroll-margin-top: 128px; }
 a { color: inherit; text-decoration: none; }
 button, input { font: inherit; }
 img { max-width: 100%; display: block; }
@@ -804,16 +805,19 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 }
 
 @media (max-width: 760px) {
-  .topbar { grid-template-columns: auto auto; padding: 12px 14px; gap: 12px; }
+  .topbar { grid-template-columns: minmax(0, 1fr) 44px; padding: 12px 14px; gap: 12px; align-items: center; }
   .brand { font-size: .9rem; }
-  .menu-button { justify-self: end; }
-  .header-actions { grid-column: 1 / -1; justify-content: stretch; display: grid; grid-template-columns: 1fr 1fr; }
-  .header-actions .outline-button, .header-actions .solid-button { min-height: 40px; padding-inline: 12px; font-size: .82rem; }
+  .menu-button { order: 0; justify-self: end; grid-column: 2; grid-row: 1; }
+  .header-actions { order: 3; grid-column: 1 / -1; grid-row: 2; justify-content: stretch; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+  .header-actions .outline-button, .header-actions .solid-button { width: 100%; min-width: 0; min-height: 40px; padding-inline: 8px; font-size: .76rem; white-space: normal; text-align: center; line-height: 1.1; }
+  .topbar nav { order: 4; }
   .topbar nav.nav-open { display: grid; grid-template-columns: repeat(2, 1fr); }
   .hero-grid, .benefits-section, .roadmap-shell, .projects-section, .tools-section, .industry-section, .process-section, .career-section, .proof-section, .transform-section, .pricing-section, .demo-section, .faq-section, .resources-section, .blog-section, .site-footer { width: calc(100% - 28px); }
   .hero-section { padding-top: 10px; }
   .hero-grid { padding-top: 28px; gap: 22px; }
-  .hero-copy h1 { font-size: clamp(3rem, 16vw, 4.35rem); }
+  main#home { scroll-margin-top: 150px; }
+  .hero-copy h1 { font-size: clamp(2.35rem, 11vw, 3.05rem); line-height: 1.04; overflow-wrap: anywhere; }
+  .hero-copy h1 span, .hero-copy h1 em { overflow-wrap: anywhere; }
   .hero-copy > p:not(.eyebrow) { font-size: .95rem; }
   .hero-stats { grid-template-columns: 1fr; }
   .button-row { display: grid; grid-template-columns: 1fr; }
