@@ -1,475 +1,702 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const navItems = ['Home', 'Courses', 'Blog', 'Learn', 'Contact'];
-const basePath = process.env.NODE_ENV === 'production' ? '/switch-to-devops-homepage' : '';
-const assetPath = (path) => `${basePath}${path}`;
+const WHATSAPP = 'https://wa.me/919911670132';
+const ENROLL = '#enroll';
 
-const heroStats = [
-  ['127+', 'Placed'],
-  ['Max 10', 'Per Batch'],
-  ['₹18L', 'Avg CTC'],
-  ['8 Wks', 'Duration'],
+const navItems = [
+  { label: 'Home', href: '#home' },
+  { label: 'Courses', href: '#courses' },
+  { label: 'Roadmap', href: '#roadmap' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Mentorship', href: '#why-us' },
+  { label: 'Success Stories', href: '#stories' },
+  { label: 'Resources', href: '#resources', hasMenu: true },
 ];
 
-const mainStats = [
-  ['127+', 'Students Placed'],
-  ['₹18L', 'Avg Salary CTC'],
-  ['Up to 85%', 'Placement Rate'],
-  ['Max 10', 'Students/Batch'],
-];
-
-const companies = [
-  ['TCS', '12 LPA'],
-  ['Infosys', '10 LPA'],
-  ['Wipro', '11 LPA'],
-  ['Flipkart', '20 LPA'],
-  ['Razorpay', '22 LPA'],
-  ['PhonePe', '20 LPA'],
-  ['Swiggy', '18 LPA'],
-  ['Accenture', '13 LPA'],
-  ['HCL Tech', '10 LPA'],
+const stats = [
+  { value: '500+', label: 'Students Trained', tone: 'orange', icon: 'users' },
+  { value: '85%', label: 'Placement Rate', tone: 'green', icon: 'chart' },
+  { value: '100+', label: 'Hiring Partners', tone: 'violet', icon: 'briefcase' },
+  { value: '4.8/5', label: 'Average Rating', tone: 'orange', icon: 'star' },
+  { value: '6+', label: 'Years Industry Experience', tone: 'blue', icon: 'shield' },
 ];
 
 const benefits = [
   {
-    title: 'Learn from an AWS DevOps Engineer with 6+ Years Industry Experience',
-    copy: 'Your trainer is an active AWS DevOps Engineer at TCS with 6+ years of hands-on experience deploying real production systems — not a full-time instructor reading slides.',
-    tag: 'PRODUCTION MENTORSHIP',
+    title: 'Real World Learning',
+    copy: 'Build production-grade pipelines, containers and cloud infra — not toy demos.',
+    tone: 'orange',
+    image:
+      'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80',
   },
   {
-    title: 'Only 10 Students Per Batch – Guaranteed Personal Attention',
-    copy: 'We cap every batch at 10 students so you are never lost in a crowd. Every doubt gets answered, every concept gets reinforced, and your progress is tracked individually.',
-    tag: 'SMALL BATCH SYSTEM',
+    title: 'Personalized Mentorship',
+    copy: '1:1 guidance from practising DevOps engineers who ship on AWS every day.',
+    tone: 'green',
+    image:
+      'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80',
   },
   {
-    title: 'Build Real Projects, Not Follow-Along Tutorials',
-    copy: 'You will architect and deploy end-to-end systems on live AWS infrastructure — CI/CD pipelines, EKS clusters, Terraform modules — the kind of work that impresses interviewers.',
-    tag: 'LIVE AWS PROJECTS',
-  },
-  {
-    title: 'Live Interactive Classes with Lifetime Recording Access',
-    copy: 'Every session is live, interactive and recorded. Missed a class or want to revise before an interview? Access every recording forever at no extra charge.',
-    tag: 'LIVE + RECORDED',
+    title: 'Career Support',
+    copy: 'Resume reviews, mock interviews and referrals until you land the role.',
+    tone: 'violet',
+    image:
+      'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=900&q=80',
   },
 ];
 
-const curriculum = [
-  ['Linux and Shell Scripting for DevOps', '1 week', ['File system, permissions, process management', 'Bash scripting, cron jobs, automation scripts', 'SSH, networking commands, system monitoring']],
-  ['Git and GitHub for Version Control', '1 week', ['Branching strategies, merge, rebase', 'Pull requests, code reviews, GitFlow', 'GitHub Actions integration basics']],
-  ['Docker Containerization from Scratch', '1 week', ['Images, containers, Dockerfile, multi-stage builds', 'Docker Compose for multi-container apps', 'Container networking, volumes, registries']],
-  ['Kubernetes Orchestration on AWS EKS', '2 weeks', ['Pods, Deployments, Services, Ingress', 'Helm charts, namespaces, RBAC', 'EKS cluster setup, auto-scaling, node groups']],
-  ['Terraform Infrastructure as Code', '1.5 weeks', ['Providers, resources, variables, outputs', 'State management, remote backends, workspaces', 'Modular Terraform for multi-environment infra']],
-  ['Ansible Configuration Management', '1 week', ['Inventory, playbooks, roles, variables', 'Idempotent automation, Ansible Vault', 'Server provisioning and app deployment']],
-  ['Jenkins and GitHub Actions CI/CD Pipelines', '1.5 weeks', ['Declarative pipelines, agents, shared libraries', 'GitHub Actions workflows, secrets, matrix builds', 'Integration with SonarQube, Trivy, Nexus']],
-  ['ArgoCD GitOps Deployment', '1 week', ['GitOps principles, ArgoCD install on EKS', 'App of apps pattern, sync policies', 'Blue-green and canary deployments']],
-  ['Prometheus and Grafana Monitoring and Alerting', '1 week', ['Prometheus scraping, PromQL, recording rules', 'Grafana dashboards, data sources, annotations', 'Alertmanager, PagerDuty integration, runbooks']],
-  ['AWS Core Services – EKS, RDS, Aurora, MSK, OpenSearch', '2 weeks', ['VPC, IAM, EKS, ECR, ALB, Route 53', 'RDS Aurora MySQL, multi-AZ, read replicas', 'MSK (Kafka), OpenSearch, parameter store']],
+const modules = [
+  { n: '01', title: 'DevOps & Linux Fundamentals', icon: 'linux' },
+  { n: '02', title: 'Git & Collaboration Workflows', icon: 'git' },
+  { n: '03', title: 'CI with Jenkins & GitHub Actions', icon: 'jenkins' },
+  { n: '04', title: 'Config Management with Ansible', icon: 'ansible' },
+  { n: '05', title: 'Docker Containerization', icon: 'docker' },
+  { n: '06', title: 'Kubernetes Orchestration', icon: 'k8s' },
+  { n: '07', title: 'Cloud with AWS', icon: 'aws' },
+  { n: '08', title: 'Monitoring & GitOps', icon: 'monitor' },
 ];
 
-const projects = [
+const projectTabs = [
   {
-    type: 'CI/CD',
-    title: 'End-to-End CI/CD Pipeline for a Live E-Commerce Application',
-    copy: 'Build a complete pipeline with Jenkins and GitHub Actions. Code pushed to GitHub triggers automated tests, Docker image build, security scan with Trivy, and deployment to EKS via ArgoCD.',
-    tools: ['Jenkins', 'GitHub Actions', 'Docker', 'Trivy', 'ArgoCD', 'EKS'],
+    id: 'ecommerce',
+    label: 'E-Commerce App',
+    title: 'End-to-End E-Commerce Deployment',
+    copy: 'Users hit Nginx, traffic lands on containerized app servers, and data flows to RDS with assets on S3 — the full production path.',
+    nodes: ['Users', 'Nginx', 'Docker App Server', 'DB (RDS)', 'S3 Storage'],
+    commands: [
+      '$ terraform apply',
+      '$ aws eks update-kubeconfig --name prod',
+      '$ docker build -t shop:latest .',
+      '$ kubectl apply -f k8s/',
+      '$ kubectl rollout status deploy/shop',
+    ],
   },
   {
-    type: 'Infrastructure',
-    title: 'Multi-Region AWS EKS Deployment with Terraform',
-    copy: 'Provision a production-grade EKS cluster across two AWS regions using Terraform modules. Configure VPC, subnets, IAM, node groups, and ALB ingress with zero-downtime failover.',
-    tools: ['Terraform', 'AWS EKS', 'VPC', 'IAM', 'ALB', 'Route 53'],
+    id: 'microservices',
+    label: 'Microservices App',
+    title: 'Multi-Service Platform on EKS',
+    copy: 'Design, containerize and deploy a multi-service stack with service discovery, ingress and independent rollouts.',
+    nodes: ['API Gateway', 'Auth Svc', 'Order Svc', 'Redis', 'PostgreSQL'],
+    commands: [
+      '$ helm upgrade --install api ./charts/api',
+      '$ kubectl get pods -n shop',
+      '$ kubectl logs -f deploy/auth',
+      '$ argocd app sync shop-prod',
+      '$ kubectl get ingress -A',
+    ],
   },
   {
-    type: 'GitOps',
-    title: 'Blue-Green and Canary Deployment with ArgoCD',
-    copy: 'Deploy a microservices application with zero-downtime blue-green and canary strategies on EKS. Use Argo Rollouts to control traffic shifting and automatic rollback on failed health checks.',
-    tools: ['ArgoCD', 'Argo Rollouts', 'EKS', 'Helm', 'Istio'],
+    id: 'cicd',
+    label: 'CI/CD Pipeline',
+    title: 'Automated Build → Scan → Deploy',
+    copy: 'Wire Jenkins and GitHub Actions so every commit is tested, scanned with Trivy, imaged and shipped via ArgoCD.',
+    nodes: ['GitHub', 'Jenkins', 'Trivy', 'ECR', 'ArgoCD'],
+    commands: [
+      '$ git push origin main',
+      '$ jenkins build job/devops-pipeline',
+      '$ trivy image shop:1.4.2',
+      '$ docker push 123.dkr.ecr/shop:1.4.2',
+      '$ argocd app sync shop',
+    ],
   },
   {
-    type: 'Monitoring',
-    title: 'Production Monitoring Stack with Prometheus, Grafana and Alertmanager',
-    copy: 'Set up full observability for your EKS workloads. Configure Prometheus scraping, write PromQL alerts, build Grafana dashboards and route alerts to Slack and PagerDuty via Alertmanager.',
-    tools: ['Prometheus', 'Grafana', 'Alertmanager', 'PromQL', 'Slack'],
+    id: 'monitoring',
+    label: 'Monitoring Stack',
+    title: 'Prometheus + Grafana Observability',
+    copy: 'Stand up scraping, dashboards and Alertmanager so production health is visible before users feel pain.',
+    nodes: ['Apps', 'Prometheus', 'Grafana', 'Alertmanager', 'PagerDuty'],
+    commands: [
+      '$ helm install kube-prom prometheus-community/kube-prometheus-stack',
+      '$ kubectl port-forward svc/grafana 3000',
+      '$ curl localhost:9090/api/v1/query',
+      '$ kubectl get prometheusrules -A',
+      '$ amtool alert',
+    ],
   },
-  {
-    type: 'Automation',
-    title: 'Infrastructure Automation with Ansible Playbooks',
-    copy: 'Write idempotent Ansible playbooks to configure EC2 instances, deploy applications, rotate secrets and enforce compliance. Integrate with Terraform for full infrastructure-to-app automation.',
-    tools: ['Ansible', 'EC2', 'Ansible Vault', 'Terraform', 'Python'],
-  },
-];
-
-const tools = ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Jenkins', 'GitHub Actions', 'ArgoCD', 'AWS EKS', 'AWS RDS', 'AWS MSK', 'Prometheus', 'Grafana', 'Helm', 'SonarQube', 'Trivy', 'Linux'];
-
-const howItWorks = [
-  ['10 students max', 'Maximum 10 students Per Batch', "Every batch is hard-capped at 10 students. This is not a marketing claim — it is how we maintain quality. Small batches mean the trainer knows your name, your background, and your weak spots."],
-  ['100% live sessions', 'Live Online Classes with Real-Time Doubt Solving', 'Classes run live on Zoom with screen sharing, live coding and instant doubt resolution. No recorded-course approach where you are left googling your own questions.'],
-  ['8+ project reviews', 'Weekly Assignments and Project Reviews', 'Each week you submit a hands-on assignment that mirrors a real work task. Your trainer reviews it personally, gives written feedback, and flags gaps before the next module begins.'],
-  ['1:1 interview prep', 'One-on-One Mentorship for Interview Preparation', 'In the final weeks you get dedicated one-on-one sessions for mock interviews, resume review and offer negotiation — so you walk into interviews prepared, not nervous.'],
-];
-
-const careers = [
-  ['DevOps Engineer – Average Salary and Job Roles', '8 – 22 LPA', 'The most in-demand role in the industry. DevOps Engineers build and maintain CI/CD pipelines, manage cloud infrastructure and own the reliability of production deployments. Entry-level roles start at 8 LPA; senior engineers with AWS/Kubernetes expertise command 18–22 LPA.', ['TCS', 'Infosys', 'Wipro', 'Flipkart', 'Razorpay']],
-  ['Site Reliability Engineer – What They Do and What They Earn', '15 – 40 LPA', 'SREs sit at the intersection of software engineering and operations. They define SLOs, build automation to eliminate toil, manage incidents and architect for reliability at scale. SRE roles at product companies pay significantly more than traditional ops roles.', ['Swiggy', 'PhonePe', 'Zomato', 'Razorpay', 'Paytm']],
-  ['Platform Engineer – The Next Big Career in DevOps', '18 – 45 LPA', 'Platform Engineers build the internal developer platform — the tooling, self-service portals and golden paths that help product teams ship faster. This is the fastest-growing specialisation in DevOps and pays a premium for engineers who can think in systems.', ['Paytm', 'Meesho', 'Zepto', 'Juspay', 'Groww']],
-  ['Cloud Engineer and DevOps Architect Career Paths', '20 – 60 LPA', 'Cloud Engineers specialise in designing and operating cloud infrastructure at scale. DevOps Architects lead the strategy and toolchain decisions for entire engineering organisations. Both paths are senior roles that require 4–7 years of hands-on experience.', ['AWS', 'Deloitte', 'Accenture', 'HCL Tech', 'Cognizant']],
-  ['Companies Hiring DevOps Engineers Right Now', 'All Levels', 'Demand for DevOps talent is at an all-time high across service companies, product companies and startups. Roles are open across experience levels — from freshers to architects — and many are fully remote.', ['TCS', 'Infosys', 'Wipro', 'Flipkart', 'Razorpay', 'PhonePe', 'Swiggy', 'Paytm']],
 ];
 
 const testimonials = [
-  ['"मतलब ज़ीरो से एक तरीके से उठाया है। तो हर एक चीज़ के लिए"', 'Student Testimonial', 'Career Transition', 'DevOps Professional', '10+ LPA'],
-  ['"Practical hands-on training with real-world projects. The mentorship was exceptional."', 'DevOps Student', 'IT Professional', 'DevOps Engineer', '12 LPA'],
+  {
+    quote:
+      'The training was excellent and practical. I got placed as DevOps Engineer with a great package.',
+    name: 'Arun Kumar',
+    role: 'DevOps Engineer at Capgemini',
+    image:
+      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1000&q=80',
+  },
+  {
+    quote:
+      'Hands-on AWS projects and mentor feedback made the switch from support to DevOps feel achievable.',
+    name: 'Priya Patel',
+    role: 'Cloud DevOps Engineer at Flipkart',
+    image:
+      'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1000&q=80',
+  },
+  {
+    quote:
+      'Small batches meant every doubt got answered. The mock interviews sealed my offer.',
+    name: 'Rahul Sharma',
+    role: 'DevOps Engineer at Razorpay',
+    image:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=80',
+  },
 ];
 
-const transformations = [
-  ['Priya Patel', 'Batch 12', 'Cloud DevOps Engineer · Flipkart', '4.5 LPA', 'Support Engineer', '22 LPA', 'Flipkart'],
-  ['Rahul Sharma', 'Batch 13', 'DevOps Engineer · Razorpay', '5 LPA', 'System Admin', '19 LPA', 'Razorpay'],
-  ['Amit Kumar', 'Batch 14', 'Site Reliability Engineer · PhonePe', '6 LPA', 'Developer', '21 LPA', 'PhonePe'],
-  ['Sneha Rao', 'Batch 15', 'AWS DevOps Engineer · TCS', '3.5 LPA', 'Fresher', '14 LPA', 'TCS'],
-  ['Kiran Reddy', 'Batch 16', 'Kubernetes Engineer · Infosys', '4 LPA', 'Tester', '15 LPA', 'Infosys'],
-  ['Divya Krishnan', 'Batch 17', 'CI/CD Engineer · Wipro', '4 LPA', 'Manual QA', '13 LPA', 'Wipro'],
+const ctaPoints = [
+  'Live Online Training',
+  'Weekend Batches',
+  'Real AWS Projects',
+  'Placement Support',
 ];
 
-const pricing = [
-  ['FOUNDATION', 'Course Duration and Weekly Schedule – L1', 'Beginners · 40 hours · Weekend batches (Sat + Sun)', '15,000', ['Linux Administration & Shell Scripting', 'Git & Version Control (GitHub, GitLab)', 'Docker Basics & Containerization', 'CI/CD Fundamentals with Jenkins', 'AWS Basics (EC2, S3, IAM)', 'Basic Networking & Security', 'Hands-on labs included', 'Course completion certificate', 'Placement assistance'], 'Enroll in L1', 'Entry-level DevOps roles (4-8 LPA)'],
-  ['MOST POPULAR', 'Course Fee and Payment Options – L2', 'Most popular · 50 hours · EMI available · Weekend batches', '35,000', ['All L1 Topics (Advanced Level)', 'Advanced Docker & Kubernetes', 'Jenkins Pipelines & GitOps (ArgoCD, Flux)', 'Terraform & Infrastructure as Code', 'AWS/Azure Cloud Services & Deployment', 'Monitoring (Prometheus, Grafana, ELK)', 'Ansible & Configuration Management', '8+ Real-world DevOps Projects', 'DevOps Project Portfolio', 'Resume building & interview preparation'], 'Enroll in L2', 'DevOps Engineer (8-18 LPA)'],
-  ['EXPERT', 'What is Included in the Course Fee – L3', 'Expert level · 150 hours · Full mentorship + placement', '70,000', ['All L1 + L2 Topics (Expert Level)', 'Advanced Kubernetes & Service Mesh (Istio)', 'Advanced Cloud Architecture & Multi-Cloud', 'Service Mesh & Production Deployment', 'Multi-Cloud Architecture (AWS + Azure + GCP)', 'DevSecOps & Security Automation', 'SRE Principles & Incident Management', 'Advanced Monitoring & Observability', 'Chaos Engineering & Resilience', 'Capstone: Complete Production Infrastructure'], 'Enroll in L3', 'Senior DevOps/SRE Engineer (18-40+ LPA)'],
+const resourceLinks = [
+  'DevOps Roadmap',
+  'Curriculum PDF',
+  'Interview Guide',
+  'Salary Report 2026',
 ];
 
-const faqs = [
-  ['Why do you only accept 10 students per batch?', "We deliberately keep batches small because DevOps requires hands-on practice and personalized feedback. With 10 students, I can review every student's Terraform code, debug their Kubernetes deployments in real-time, and provide specific career guidance based on their background. Large institutes run 30-40 student batches where you're just a number. Here, I know each student's strengths and weak areas by week 2. That's why our placement rate is up to 85% — personalized attention works."],
-  ['Can I see the actual AWS projects before enrolling?', "Yes. Visit our GitHub repository at github.com/switchtodevops/student-projects (public repo) to see completed projects from previous batches. You'll find: (1) E-commerce app with Jenkins CI/CD pipeline deployed on EKS, (2) Multi-region Terraform infrastructure with state management, (3) Production monitoring stack with Prometheus and Grafana. During the free demo session, I walk through one complete project live — showing the architecture, code, and deployment process."],
-  ["What's your refund policy if I don't get placed?", 'We offer a 100% refund if you complete all 8 weeks, submit all 5 projects, attend 90% of classes, and don\'t receive a job offer within 6 months of course completion. However, in 4 years of running this program, only 2 students have requested refunds (both got placed in month 7). The key is "complete the course" — students who finish all projects and actively apply get placed. We don\'t guarantee placement for students who drop out halfway or don\'t complete assignments.'],
-  ['How is this different from 1,000 Udemy courses?', 'Udemy courses are pre-recorded videos. You watch alone, get stuck, and quit. Our training is 100% live — you deploy on real AWS infrastructure during class, I debug your errors in real-time, and you get immediate answers. The batch size of 10 means I review your code personally. Udemy has no placement support, no resume reviews, no mock interviews, and no alumni network. Our students get internal referrals from 500+ alumni at companies like Flipkart, Razorpay, and Swiggy. That network alone is worth more than 35,000.'],
-  ['Do I need to buy AWS credits or pay extra for cloud resources?', "No. The 35,000 course fee includes everything — AWS credits for all 5 projects (approximately $50 worth), access to our shared EKS clusters for practice, all course materials, lifetime recording access, and placement support. You don't pay anything extra. We provide AWS accounts with pre-configured IAM permissions so you can start deploying from day 1 without worrying about billing."],
-  ["What if I'm currently working — can I manage the course schedule?", 'Yes. 70% of our students are working professionals. We offer two batch timings: (1) Weekday evening batch: Mon-Thu 7-9:30 PM IST, (2) Weekend batch: Sat-Sun 10 AM-1 PM IST. All sessions are recorded, so if you miss a class due to work, you can watch the recording and submit doubts via Slack. The course is designed for working professionals — assignments take 3-5 hours per week, which you can complete on weekends.'],
-  ["Who is the instructor and what's their background?", "I'm Firoz Khan, AWS Certified Solutions Architect and former DevOps Lead at TCS where I managed a team of 12 engineers running 38 microservices across 4 AWS regions. I've handled production incidents at 2 AM, optimized cloud costs from $45K to $28K per month, and interviewed 200+ DevOps candidates. I don't teach theory from slides — I teach what actually works in production environments based on 8 years of hands-on experience. You can verify my credentials on LinkedIn: linkedin.com/in/firoz-khan-devops"],
-  ['How many students actually get placed and at what salary?', "Up to 85% of students who complete the course get placed within 3 months. Average starting salary: 8.2 LPA for freshers, 12.5 LPA for professionals with 2-3 years experience. Our highest placement this year: 22 LPA at Flipkart Bangalore. We share verified placement details — company names and roles — with prospective students on request. We don't hide our numbers — transparency builds trust."],
-  ['What happens after I complete the course?', "You get lifetime access to: (1) All course recordings and materials, (2) Our private Slack community with 500+ alumni, (3) Monthly alumni meetups where we discuss new tools and interview patterns, (4) Continued placement support — resume updates, mock interviews, referrals — even 2 years after completing the course. Many alumni return for advanced topics like Kubernetes CKA prep or Terraform deep dives. Once you join, you're part of the SwitchToDevOps family permanently."],
-  ['Can I talk to a current student or alumni before enrolling?', "Absolutely. We encourage it. During your free demo session, I'll connect you with 2-3 alumni from your city or background (e.g., if you're from Chennai and working at TCS, I'll connect you with alumni who were in the same situation). You can ask them anything — course quality, placement support, whether it's worth 35,000. We have nothing to hide. Real testimonials with LinkedIn profiles are on our website — not fake reviews with stock photos."],
-];
+function Icon({ name }) {
+  const common = {
+    width: 22,
+    height: 22,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.8,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    'aria-hidden': true,
+  };
 
-const resourceGroups = [
-  ['DevOps Courses by Location', ['DevOps Course in Bangalore — Popular — Whitefield, Koramangala, Electronic City', 'DevOps Course in Mumbai — BFSI & fintech focus · BKC, Powai, Andheri', 'DevOps Course in Hyderabad — HITEC City, Gachibowli, Financial District', 'DevOps Course in Pune — Hinjewadi, Kharadi, Baner product hubs', 'DevOps Course in Chennai — OMR SaaS belt, Guindy, Ambattur', 'DevOps Course in Delhi NCR — Gurgaon, Noida, South Delhi', 'DevOps Course in Kolkata — Salt Lake Sector V, New Town']],
-  ['Career Guides', ['Is DevOps a Good Career? — Complete career analysis for 2026', 'DevOps vs Cloud Engineer — Salary comparison in India', 'Top DevOps Companies — Highest paying companies in India', 'DevOps Engineer Salary in India — Realistic 2026 pay by experience', 'Remote DevOps Jobs — Work-from-anywhere roles & pay', 'Career Switch at 30+ — Real success stories & strategy', 'Service vs Product Companies — Which path fits you?']],
-  ['Learning Resources', ['Start DevOps from Zero — Complete beginner\'s guide', 'DevOps Fundamentals — Core concepts explained', 'DevOps Roadmap — Step-by-step guide for freshers', 'Docker Explained — Containers for beginners', 'Kubernetes Explained — Orchestration made simple', 'Linux for DevOps — The essential foundation skill', 'CI/CD Pipeline Explained — Automation made simple']],
-];
+  switch (name) {
+    case 'users':
+      return (
+        <svg {...common}>
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      );
+    case 'chart':
+      return (
+        <svg {...common}>
+          <path d="M3 3v18h18" />
+          <path d="M7 14l4-4 4 3 5-6" />
+        </svg>
+      );
+    case 'briefcase':
+      return (
+        <svg {...common}>
+          <rect x="3" y="7" width="18" height="13" rx="2" />
+          <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        </svg>
+      );
+    case 'star':
+      return (
+        <svg {...common}>
+          <path d="M12 3l2.6 5.3 5.9.9-4.2 4.1 1 5.8L12 16.9 6.7 19.1l1-5.8L3.5 9.2l5.9-.9L12 3z" />
+        </svg>
+      );
+    case 'shield':
+      return (
+        <svg {...common}>
+          <path d="M12 3l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z" />
+        </svg>
+      );
+    case 'download':
+      return (
+        <svg {...common}>
+          <path d="M12 3v12" />
+          <path d="M7 10l5 5 5-5" />
+          <path d="M5 21h14" />
+        </svg>
+      );
+    case 'arrow':
+      return (
+        <svg {...common} width={18} height={18}>
+          <path d="M5 12h14" />
+          <path d="M13 6l6 6-6 6" />
+        </svg>
+      );
+    case 'cloud':
+      return (
+        <svg {...common} width={28} height={28} viewBox="0 0 32 32" strokeWidth={1.6}>
+          <path d="M10 22h12a5 5 0 0 0 .4-10 7 7 0 0 0-13.2 2.2A4.5 4.5 0 0 0 10 22z" />
+          <circle cx="16" cy="16" r="3.2" />
+          <path d="M16 14.2v3.6M14.2 16h3.6" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
 
-const blogPosts = [
-  ['Career Guide', 'DevOps Roadmap for Freshers 2026: Step-by-Step Guide', '20 Mar 2026', 'Ravi Shankar'],
-  ['DevOps', 'How to Start DevOps from Zero in 2026: Beginners Guide', '18 Mar 2026', 'Amit Verma'],
-  ['Interview Prep', 'DevOps Interview Questions 2026: Complete Preparation Guide', '15 Mar 2026', 'Priya Singh'],
-  ['Salary', 'DevOps Engineer Salary in India 2026: Complete Guide', '12 Mar 2026', 'Kiran Mehta'],
-  ['Kubernetes', 'Why 87% DevOps Jobs Require Kubernetes Skills in 2026', '10 Mar 2026', 'Deepak Nair'],
-  ['Comparison', 'DevOps vs Cloud Engineer: Salary & Career Comparison India 2026', '8 Mar 2026', 'Sanya Kapoor'],
-];
+function ModuleGlyph({ type }) {
+  return <span className={`module-glyph module-glyph--${type}`} aria-hidden />;
+}
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
 
   return (
-    <header className="topbar">
-      <a className="brand" href="#home" aria-label="SwitchtoDevOps home">
-        <span className="brand-mark">↥</span>
-        <span>Switch<span>to DevOps</span></span>
-      </a>
-      <button className="menu-button" type="button" aria-label="Open navigation" aria-expanded={open} onClick={() => setOpen(!open)}>
-        <span />
-        <span />
-        <span />
-      </button>
-      <nav className={open ? 'nav-open' : ''} aria-label="Primary navigation">
-        {navItems.map((item) => (
-          <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} onClick={() => setOpen(false)}>{item}</a>
-        ))}
-      </nav>
-      <div className="header-actions">
-        <a className="outline-button" href="https://wa.me/919911670132">Chat on WhatsApp</a>
-        <a className="solid-button" href="#contact">Book Free Demo</a>
+    <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
+      <div className="header-inner">
+        <a className="logo" href="#home" aria-label="Switch to DevOps home">
+          <span className="logo-mark">
+            <Icon name="cloud" />
+          </span>
+          <span className="logo-text">
+            Switch to <em>DevOps</em>
+          </span>
+        </a>
+
+        <nav className="desktop-nav" aria-label="Primary">
+          {navItems.map((item) => (
+            <a key={item.label} href={item.href}>
+              {item.label}
+              {item.hasMenu ? <span className="nav-caret" aria-hidden /> : null}
+            </a>
+          ))}
+        </nav>
+
+        <div className="header-actions">
+          <a className="btn btn-ghost" href={WHATSAPP} target="_blank" rel="noreferrer">
+            Talk to Mentor
+          </a>
+          <a className="btn btn-primary" href={ENROLL}>
+            Enroll Now <Icon name="arrow" />
+          </a>
+        </div>
+
+        <button
+          className={`menu-toggle ${open ? 'is-open' : ''}`}
+          type="button"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </div>
+
+      <div className={`mobile-panel ${open ? 'is-open' : ''}`}>
+        <nav aria-label="Mobile">
+          {navItems.map((item) => (
+            <a key={item.label} href={item.href} onClick={() => setOpen(false)}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <div className="mobile-actions">
+          <a className="btn btn-ghost" href={WHATSAPP} target="_blank" rel="noreferrer" onClick={() => setOpen(false)}>
+            Talk to Mentor
+          </a>
+          <a className="btn btn-primary" href={ENROLL} onClick={() => setOpen(false)}>
+            Enroll Now <Icon name="arrow" />
+          </a>
+        </div>
       </div>
     </header>
   );
 }
 
 function CommandCenter() {
-  const lines = ['Initializing pipeline', 'Code checkout', 'Install dependencies', 'Run unit tests', 'Build Docker image', 'Deploy to Kubernetes', 'Health checks', 'Application is live!'];
+  const lines = [
+    { text: 'Initializing pipeline', ok: true },
+    { text: 'Code checkout', ok: true },
+    { text: 'Install dependencies', ok: true },
+    { text: 'Run unit tests', ok: true },
+    { text: 'Build Docker image', ok: true },
+    { text: 'Deploy to Kubernetes', ok: true },
+    { text: 'Health checks passed', ok: true },
+    { text: 'Deployment successful 🚀', ok: true, success: true },
+  ];
 
   return (
     <div className="command-center" aria-label="Deployment Command Center">
-      <div className="terminal-panel">
-        <p className="panel-label">DEPLOYMENT COMMAND CENTER</p>
-        <div className="terminal-lines">
-          {lines.map((line, index) => (
-            <div className="terminal-line" key={line}>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <code>{index === 0 ? '$ ' : '> '}{line}</code>
-              <time>10:{24 + index}:3{index}</time>
+      <div className="cc-glow" aria-hidden />
+      <div className="cc-grid">
+        <article className="cc-terminal">
+          <header>
+            <span className="dot red" />
+            <span className="dot yellow" />
+            <span className="dot green" />
+            <p>pipeline.log</p>
+          </header>
+          <ul>
+            {lines.map((line, i) => (
+              <li key={line.text} style={{ animationDelay: `${0.12 * i}s` }}>
+                <time>10:{String(24 + i).padStart(2, '0')}:3{i}</time>
+                <span className={line.success ? 'ok success' : 'ok'}>✓</span>
+                <code>{line.text}</code>
+              </li>
+            ))}
+          </ul>
+        </article>
+
+        <article className="cc-infra">
+          <p className="cc-label">Infrastructure Overview</p>
+          <div className="infra-map">
+            <div className="node nginx">Nginx</div>
+            <div className="node-row">
+              <div className="node app">App Service</div>
+              <div className="node app">App Service</div>
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="infra-panel">
-        <p className="panel-label">INFRASTRUCTURE OVERVIEW</p>
-        <div className="infra-map">
-          <span>Nginx<br />Load Balancer</span>
-          <span>App Service</span>
-          <span>App Service</span>
-          <span>Redis<br />Cache</span>
-          <span>PostgreSQL<br />DB</span>
-        </div>
-      </div>
-      <div className="health-grid">
-        <article><strong>100%</strong><span>System Health</span></article>
-        <article><strong>23%</strong><span>CPU Usage</span><i /></article>
-        <article><strong>24</strong><span>Deployments</span><b /></article>
+            <div className="node-row">
+              <div className="node redis">Redis</div>
+              <div className="node pg">PostgreSQL</div>
+            </div>
+          </div>
+        </article>
+
+        <article className="cc-metric health">
+          <div className="ring" aria-hidden>
+            <strong>100%</strong>
+          </div>
+          <p>System Health</p>
+        </article>
+
+        <article className="cc-metric cpu">
+          <p className="cc-label">CPU Usage</p>
+          <svg viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden>
+            <path d="M0 28 C12 26, 18 10, 30 16 S48 34, 60 22 78 6, 90 14 108 30, 120 18" />
+          </svg>
+          <strong>23%</strong>
+        </article>
+
+        <article className="cc-metric deploys">
+          <p className="cc-label">Deployments</p>
+          <div className="bars" aria-hidden>
+            <i style={{ height: '40%' }} />
+            <i style={{ height: '65%' }} />
+            <i style={{ height: '50%' }} />
+            <i style={{ height: '85%' }} />
+            <i style={{ height: '70%' }} />
+            <i className="active" style={{ height: '95%' }} />
+          </div>
+          <strong>
+            24 <span>This Week</span>
+          </strong>
+        </article>
       </div>
     </div>
-  );
-}
-
-function SectionIntro({ eyebrow, title, copy, dark = false }) {
-  return (
-    <div className={`section-intro ${dark ? 'dark' : ''}`}>
-      <p className="eyebrow">{eyebrow}</p>
-      <h2>{title}</h2>
-      {copy ? <p>{copy}</p> : null}
-    </div>
-  );
-}
-
-function FaqItem({ item, index }) {
-  const [open, setOpen] = useState(index === 0);
-  return (
-    <article className="faq-item">
-      <button type="button" aria-expanded={open} onClick={() => setOpen(!open)}>
-        <span>{item[0]}</span>
-        <b>{open ? '−' : '+'}</b>
-      </button>
-      <p hidden={!open}>{item[1]}</p>
-    </article>
   );
 }
 
 export default function HomePage() {
-  const [activeProject, setActiveProject] = useState(0);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const project = projects[activeProject];
-  const testimonial = testimonials[activeTestimonial];
-  const tickerCompanies = useMemo(() => [...companies, ...companies], []);
+  const [projectIndex, setProjectIndex] = useState(0);
+  const [storyIndex, setStoryIndex] = useState(0);
+  const project = projectTabs[projectIndex];
+  const story = testimonials[storyIndex];
 
   return (
     <>
-      <div className="watermark">Working Concept — Saradhi Tech</div>
       <Header />
-      <main id="home">
-        <section className="hero-section">
-          <div className="hero-grid">
+      <main>
+        <section className="hero" id="home">
+          <div className="hero-atmosphere" aria-hidden />
+          <div className="hero-inner">
             <div className="hero-copy">
-              <p className="eyebrow">BATCH STARTS JULY 12 · ONLY 3 SEATS LEFT</p>
-              <h1>Live DevOps Course —<span>Get Hired as a DevOps Engineer</span><em>Earn ₹15–25 LPA</em></h1>
-              <p>8-week live course · Real AWS projects · Max 10 students/batch</p>
-              <div className="hero-stats">
-                {heroStats.map(([value, label]) => <article key={label}><strong>{value}</strong><span>{label}</span></article>)}
+              <p className="eyebrow">From Zero to DevOps Hero</p>
+              <h1>
+                <span className="brand-lockup">Switch to DevOps</span>
+                <span className="hero-headline">Code It. Deploy It. Own It.</span>
+              </h1>
+              <p className="hero-support">
+                Master in-demand DevOps skills through real-world projects, hands-on training and
+                expert mentorship.
+              </p>
+              <div className="hero-ctas">
+                <a className="btn btn-primary btn-lg" href={ENROLL}>
+                  Enroll Now <Icon name="arrow" />
+                </a>
+                <a className="btn btn-outline btn-lg" href="#roadmap">
+                  <Icon name="download" /> Download Curriculum
+                </a>
               </div>
-              <div className="button-row">
-                <a className="solid-button" href="#contact">Book Free Demo</a>
-                <a className="outline-button" href="#courses">View Curriculum</a>
-              </div>
-              <p className="hero-note">Course fee from ₹15,000 · EMI available · GenAI included</p>
-              <p className="hero-note">Free demo · No payment required · Cancel anytime</p>
             </div>
             <CommandCenter />
           </div>
-          <div className="company-strip">
-            <p>Our Students Are Hired At — With Real Salary Packages</p>
-            <div><div>{tickerCompanies.map(([name, salary], index) => <span key={`${name}-${index}`}>{name} ↑ {salary}</span>)}</div></div>
-          </div>
-          <div className="stat-ribbon">
-            {mainStats.map(([value, label]) => <article key={label}><strong>{value}</strong><span>{label}</span></article>)}
-          </div>
         </section>
 
-        <section className="benefits-section">
-          <SectionIntro eyebrow="Why Choose Us" title="Why Choose SwitchToDevOps for Your DevOps Career" copy="Four reasons our students get hired faster than any other DevOps course" />
-          <div className="benefit-layout">
-            {benefits.map((benefit, index) => (
-              <article className="benefit-card" key={benefit.title}>
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <small>{benefit.tag}</small>
-                <h3>{benefit.title}</h3>
-                <p>{benefit.copy}</p>
+        <section className="stats-bar" aria-label="Key outcomes">
+          <div className="stats-track">
+            {stats.map((stat) => (
+              <article key={stat.label} className={`stat-item tone-${stat.tone}`}>
+                <span className="stat-icon">
+                  <Icon name={stat.icon} />
+                </span>
+                <div>
+                  <strong>{stat.value}</strong>
+                  <span>{stat.label}</span>
+                </div>
+                <span className="stat-chevron" aria-hidden />
               </article>
             ))}
           </div>
         </section>
 
-        <section className="roadmap-section" id="courses">
-          <div className="roadmap-shell">
-            <SectionIntro dark eyebrow="Curriculum" title="DevOps Course Curriculum" copy="A production-grade curriculum covering every tool DevOps engineers use on the job" />
-            <div className="roadmap-track">
-              {curriculum.map(([title, duration, bullets], index) => (
-                <article key={title}>
-                  <b>{index + 1}</b>
-                  <span>{duration}</span>
-                  <h3>{title}</h3>
-                  <p>{bullets[0]}</p>
+        <section className="why-section" id="why-us">
+          <div className="section-shell">
+            <div className="section-heading">
+              <p className="eyebrow">Why Learn With Us?</p>
+              <h2>Not just training. A complete career transformation.</h2>
+            </div>
+            <div className="benefit-grid">
+              {benefits.map((benefit) => (
+                <article key={benefit.title} className={`benefit-panel tone-${benefit.tone}`}>
+                  <div className="benefit-media">
+                    <img src={benefit.image} alt="" />
+                    <span className="benefit-icon" aria-hidden />
+                  </div>
+                  <h3>{benefit.title}</h3>
+                  <p>{benefit.copy}</p>
                 </article>
               ))}
             </div>
-            <div className="module-details">
-              {curriculum.map(([title, duration, bullets]) => (
-                <article key={`${title}-details`}>
-                  <h3>{title}</h3>
-                  <span>{duration}</span>
-                  <ul>{bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul>
-                </article>
+            <a className="text-link" href="#courses">
+              Explore all benefits <span className="dotted-trail" aria-hidden />
+              <Icon name="arrow" />
+            </a>
+          </div>
+        </section>
+
+        <section className="roadmap-section" id="roadmap">
+          <div className="section-shell">
+            <div className="section-heading center">
+              <p className="eyebrow">Your Learning Journey</p>
+              <h2>8 Weeks. 8 Powerful Modules.</h2>
+            </div>
+            <div className="roadmap-rail" role="list">
+              {modules.map((mod, index) => (
+                <div className="roadmap-step" role="listitem" key={mod.n}>
+                  <div className="step-node">
+                    <ModuleGlyph type={mod.icon} />
+                    <span>{mod.n}</span>
+                  </div>
+                  <p>{mod.title}</p>
+                  {index < modules.length - 1 ? <span className="step-arrow" aria-hidden /> : null}
+                </div>
               ))}
             </div>
-            <a className="solid-button" href="#courses">View Full DevOps Roadmap</a>
+            <div className="center-cta">
+              <a className="btn btn-primary" href="#courses">
+                View Full Curriculum <Icon name="arrow" />
+              </a>
+            </div>
           </div>
         </section>
 
-        <section className="projects-section">
-          <SectionIntro eyebrow="Real Projects" title="Hands-On DevOps Projects You Will Build During the Course" copy="Every project runs on real AWS infrastructure — the same stack companies hire for" />
-          <div className="project-console">
-            <div className="project-tabs">
-              {projects.map((item, index) => <button type="button" key={item.title} className={index === activeProject ? 'active' : ''} onClick={() => setActiveProject(index)}>{item.type}</button>)}
+        <section className="projects-section" id="projects">
+          <div className="section-shell">
+            <div className="section-heading">
+              <p className="eyebrow">Build What Companies Hire For</p>
+              <h2>Real World DevOps Projects</h2>
             </div>
-            <div className="project-stage">
-              <div className="architecture-map" aria-hidden="true">
-                {['Users', 'Nginx', 'App Server', 'DB (RDS)', 'Docker', 'S3 (Storage)'].map((node) => <span key={node}>{node}</span>)}
+
+            <div className="project-console">
+              <div className="project-tabs" role="tablist" aria-label="Project categories">
+                {projectTabs.map((tab, index) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={index === projectIndex}
+                    className={index === projectIndex ? 'is-active' : ''}
+                    onClick={() => setProjectIndex(index)}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
               </div>
-              <div className="deploy-log">
-                {['terraform apply', 'aws eks update-kubeconfig', 'docker build -t myapp .', 'docker push myapp:latest', 'kubectl apply -f k8s/', 'kubectl rollout status deployment/app'].map((line) => <code key={line}>$ {line}</code>)}
-                <strong>Deployment successfully rolled out!</strong>
+
+              <div className="project-body" role="tabpanel">
+                <div className="project-arch">
+                  <p className="cc-label">{project.title}</p>
+                  <p className="project-copy">{project.copy}</p>
+                  <div className="arch-flow">
+                    {project.nodes.map((node, i) => (
+                      <div key={node} className="arch-node-wrap">
+                        <div className="arch-node">{node}</div>
+                        {i < project.nodes.length - 1 ? <span className="arch-link" aria-hidden /> : null}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="project-terminal">
+                  <header>
+                    <span className="dot red" />
+                    <span className="dot yellow" />
+                    <span className="dot green" />
+                    <p>deploy.sh</p>
+                  </header>
+                  <pre>
+                    {project.commands.map((cmd) => (
+                      <code key={cmd}>{cmd}</code>
+                    ))}
+                  </pre>
+                </div>
               </div>
-              <article className="project-copy">
-                <p className="eyebrow">{project.type}</p>
-                <h3>{project.title}</h3>
-                <p>{project.copy}</p>
-                <div>{project.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
-                <a className="outline-button" href="#projects">How DevOps Scales Real Production Systems</a>
-              </article>
+
+              <a className="btn btn-primary project-cta" href={WHATSAPP} target="_blank" rel="noreferrer">
+                View Project Details <Icon name="arrow" />
+              </a>
             </div>
           </div>
         </section>
 
-        <section className="tools-section">
-          <SectionIntro eyebrow="Tools" title="DevOps Tools Covered in This Course" copy="Every tool in this list is used in real production environments — not just demo projects" />
-          <div className="tool-cloud">{tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
-          <a href="#learn">See Which Tools to Learn First</a>
-        </section>
-
-        <section className="industry-section" id="learn">
-          <div>
-            <p className="eyebrow">Industry-Ready DevOps Training</p>
-            <h2>Learn.<br />Build.<br />Deploy.</h2>
-            <p>Accelerate your career in DevOps with hands-on AWS projects, real CI/CD pipelines, and live mentorship — not pre-recorded videos.</p>
-            <div className="industry-stats"><span>100% Practical Training</span><span>10 Students Per Batch</span><span>6+ Years AWS Experience</span></div>
-            <div className="button-row"><a className="solid-button" href="#contact">Start Your Journey Today</a><a className="outline-button" href="#courses">View DevOps Roadmap</a></div>
-          </div>
-          <div className="trainer-panel">
-            <img src={assetPath('/assets/mentor7.jpeg')} alt="Firoz Ahmed" />
-            <div>
-              <p className="eyebrow">Your Trainer</p>
-              <h2>Meet Your DevOps Trainer</h2>
-              <p>Learn from a practising AWS DevOps engineer — not someone who teaches full-time without touching production code</p>
-              <h3>Firoz Ahmed</h3>
-              <p>AWS DevOps Engineer · TCS · 6+ Years Experience</p>
-              <div className="chips">{['EKS', 'ArgoCD', 'Terraform', 'Aurora MySQL', 'MSK Kafka'].map((item) => <span key={item}>{item}</span>)}</div>
+        <section className="stories-section" id="stories">
+          <div className="section-shell stories-grid">
+            <div className="story-photo">
+              <img src={story.image} alt={story.name} />
+              <div className="photo-frame" aria-hidden />
+            </div>
+            <div className="story-quote">
+              <p className="eyebrow">Success Stories</p>
+              <blockquote>“{story.quote}”</blockquote>
+              <div className="story-person">
+                <strong>{story.name}</strong>
+                <span>{story.role}</span>
+              </div>
+              <div className="story-nav">
+                <button
+                  type="button"
+                  aria-label="Previous story"
+                  onClick={() => setStoryIndex((i) => (i - 1 + testimonials.length) % testimonials.length)}
+                >
+                  ‹
+                </button>
+                <div className="dots">
+                  {testimonials.map((t, i) => (
+                    <button
+                      key={t.name}
+                      type="button"
+                      aria-label={`Show story ${i + 1}`}
+                      className={i === storyIndex ? 'is-active' : ''}
+                      onClick={() => setStoryIndex(i)}
+                    />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  aria-label="Next story"
+                  onClick={() => setStoryIndex((i) => (i + 1) % testimonials.length)}
+                >
+                  ›
+                </button>
+              </div>
             </div>
           </div>
-          <div className="trainer-facts">
-            {[
-              ['6+ Years as AWS DevOps Engineer at TCS', 'Not a full-time trainer — an active engineer who works with production AWS infrastructure daily and brings current, real-world knowledge to every class.'],
-              ['Deployed 38 Java Microservices Across Multi-Region AWS Infrastructure', 'Led the architecture and deployment of 38 Java microservices across multi-region AWS — the kind of project that most DevOps engineers only read about.'],
-              ['Expertise in EKS, ArgoCD, Terraform, Aurora MySQL, MSK Kafka', 'Deep hands-on expertise in the full modern DevOps stack including EKS, ArgoCD GitOps, Terraform IaC, Aurora MySQL and MSK Kafka — tools companies are actively hiring for.'],
-              ['Having training experience in Academy with Proven Student Results', 'Having training experience with a track record of students landing roles at TCS, Infosys, Wipro, startups and product companies within months of completing the course.'],
-            ].map(([title, copy]) => <article key={title}><h3>{title}</h3><p>{copy}</p></article>)}
+        </section>
+
+        <section className="final-cta" id="enroll">
+          <div className="cta-atmosphere" aria-hidden />
+          <div className="section-shell cta-inner">
+            <h2>Start Your DevOps Journey Today!</h2>
+            <p>Live mentorship, weekend batches and production projects — ready when you are.</p>
+            <ul className="cta-points">
+              {ctaPoints.map((point) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
+            <div className="hero-ctas">
+              <a className="btn btn-primary btn-lg" href={WHATSAPP} target="_blank" rel="noreferrer">
+                Enroll Now <Icon name="arrow" />
+              </a>
+              <a className="btn btn-outline btn-lg" href={WHATSAPP} target="_blank" rel="noreferrer">
+                Talk to Mentor
+              </a>
+            </div>
           </div>
         </section>
 
-        <section className="process-section">
-          <SectionIntro eyebrow="How It Works" title="How Our Small Batch DevOps Training Works" copy="A structured 8-week programme designed so no student gets left behind" />
-          <div className="process-grid">{howItWorks.map(([metric, title, copy]) => <article key={title}><strong>{metric}</strong><h3>{title}</h3><p>{copy}</p></article>)}</div>
-          <div className="button-row"><a className="solid-button" href="#contact">Book a Free Demo Class</a><a className="outline-button light" href="#careers">Is DevOps a Good Career?</a></div>
-        </section>
-
-        <section className="career-section" id="careers">
-          <SectionIntro eyebrow="Career Paths" title="DevOps Engineer Salary and Career Opportunities" copy="DevOps is one of the highest-paying engineering disciplines in India — here is what you can earn" />
-          <div className="career-list">{careers.map(([title, salary, copy, names]) => <article key={title}><strong>{salary}</strong><h3>{title}</h3><p>{copy}</p><div>{names.map((name) => <span key={name}>{name}</span>)}</div></article>)}</div>
-          <a href="#blog">Read Full DevOps Salary Guide 2026</a>
-        </section>
-
-        <section className="proof-section">
-          <div className="story-visual" aria-hidden="true" />
-          <article className="story-card">
-            <SectionIntro eyebrow="" title="What Our Students Say About This DevOps Course" copy="Real stories from real alumni — watch their journey" />
-            <p className="quote">{testimonial[0]}</p>
-            <div className="story-meta"><strong>{testimonial[1]}</strong><span>Before: {testimonial[2]}</span><span>Now: {testimonial[3]}</span><b>{testimonial[4]}</b></div>
-            <div className="dots">{testimonials.map((item, index) => <button type="button" key={item[1]} className={activeTestimonial === index ? 'active' : ''} onClick={() => setActiveTestimonial(index)} aria-label={`Show ${item[1]}`} />)}</div>
-          </article>
-        </section>
-
-        <section className="transform-section">
-          <SectionIntro eyebrow="Student Transformations" title="Real Students. Real Salaries." copy="Every card below is a real career transformation — before and after joining SwitchToDevOps" />
-          <div className="transform-grid">{transformations.map(([name, batch, role, beforePay, beforeRole, afterPay, afterCompany]) => <article key={name}><span>{batch}</span><h3>{name}</h3><p>{role}</p><div><b>Before</b><strong>{beforePay}</strong><small>{beforeRole}</small></div><em>→</em><div><b>After</b><strong>{afterPay}</strong><small>{afterCompany}</small></div></article>)}</div>
-        </section>
-
-        <section className="pricing-section">
-          <SectionIntro eyebrow="PRICING" title="DevOps Course Fee, Duration and Batch Details" copy="Transparent pricing with no hidden fees — pick the level that matches your goals" />
-          <div className="pricing-grid">{pricing.map(([tier, title, meta, price, items, cta, outcome]) => <article key={tier}><span>{tier}</span><h3>{title}</h3><p>{meta}</p><strong>{price}</strong><ul>{items.map((item) => <li key={item}>{item}</li>)}</ul><a className="solid-button" href="#contact">{cta}</a><small>{outcome}</small></article>)}</div>
-          <div className="pricing-notes">{['EMI Available — Pay in easy installments', 'Money-Back Guarantee — 100% refund within first week', 'Limited Batch Size — Only 10 students per batch', 'Referral Bonus — 2,000 off for both referrer & referee'].map((item) => <span key={item}>{item}</span>)}</div>
-        </section>
-
-        <section className="demo-section" id="contact">
-          <div>
-            <p className="eyebrow">LIMITED SEATS AVAILABLE</p>
-            <h2>Book a Free DevOps Demo Session</h2>
-            <p>In your free demo you will build a live CI/CD pipeline from scratch — not watch a slideshow. It takes 45 minutes and shows you exactly what the full course feels like.</p>
-            <ul><li>Free career counseling session</li><li>Personalized learning roadmap</li><li>Get access to sample classes</li><li>No payment required to start</li></ul>
-            <strong>Only 3 Seats Left for Next Batch</strong>
-            <span>Small-batch cohort · max 10 students per batch</span>
+        <section className="resources-section" id="resources">
+          <div className="section-shell resources-row">
+            <h2>Resources</h2>
+            <div className="resource-links">
+              {resourceLinks.map((link) => (
+                <a key={link} href="#roadmap">
+                  {link}
+                </a>
+              ))}
+            </div>
           </div>
-          <form>
-            <h3>Book FREE Demo Class</h3>
-            <label>Your Full Name *</label>
-            <input type="text" />
-            <label>Mobile number with country code *</label>
-            <input type="tel" />
-            <label>Email *</label>
-            <input type="email" />
-            <button className="solid-button" type="button">Book FREE Demo</button>
-            <p>Our Students Work At: TCS · Infosys · Wipro · Accenture · Cognizant · HCL</p>
-          </form>
-        </section>
-
-        <section className="faq-section">
-          <SectionIntro eyebrow="FAQ" title="Frequently Asked Questions About DevOps Training" copy="Everything you need to know before enrolling" />
-          {faqs.map((item, index) => <FaqItem key={item[0]} item={item} index={index} />)}
-          <div className="question-cta"><h3>Still have questions?</h3><p>Our team is here to help you make the right decision</p><a className="outline-button light" href="https://wa.me/919911670132">Chat with us on WhatsApp</a></div>
-        </section>
-
-        <section className="resources-section">
-          <SectionIntro eyebrow="Keep Exploring" title="Explore More DevOps Resources" />
-          <div className="resource-grid">{resourceGroups.map(([title, items]) => <article key={title}><h3>{title}</h3>{items.map((item) => <p key={item}>{item}</p>)}</article>)}</div>
-          <a className="solid-button" href="#contact">Enroll in DevOps Course Now</a>
-        </section>
-
-        <section className="blog-section" id="blog">
-          <SectionIntro eyebrow="" title="Latest From Our Blog" copy="Stay updated with the latest trends, tips, and insights from our experts" />
-          <div className="blog-grid">{blogPosts.map(([tag, title, date, author]) => <article key={title}><span>Featured · {tag}</span><h3>{title}</h3><p>{date}</p><strong>{author}</strong></article>)}</div>
-          <a href="#blog">View All Blog Posts</a>
         </section>
       </main>
-      <footer className="site-footer">
-        <div><a className="brand" href="#home"><span className="brand-mark">↥</span><span>Switch<span>to DevOps</span></span></a><p>SwitchtoDevOps Academy is India's leading DevOps training institute. We offer live, instructor-led training in Docker, Kubernetes, AWS, Jenkins, Terraform, and Gen AI automation. 500+ engineers trained, with dedicated placement assistance.</p><p>Learning Partner: In association with ShiftToTech Academy — offering career-focused DevOps, Cloud, AI & Data Engineering courses.</p></div>
-        <div><h3>Courses & Resources</h3><p>DevOps Certification Course · DevOps Course with GenAI · Course Fees (Transparent) · DevOps & Cloud Training · Docker & Kubernetes · AWS DevOps Course · Terraform Course · Jenkins CI/CD · Kubernetes (CKA) · DevOps Certifications · DevOps Course Mumbai · DevOps Course Bangalore · DevOps Course Delhi NCR · DevOps Course Pune · DevOps Course Kolkata · DevOps Course Noida · DevOps Course Gurugram · DevOps Roadmap 2026 · How to Start DevOps · Interview Questions · DevOps Salary India · Why Kubernetes Matters · DevOps vs Cloud Engineer · DevOps Tools Guide · Placement Assistance · DevOps Course Hyderabad · DevOps Course Chennai · Best DevOps Institute India · Blog & Resources</p></div>
-        <div><h3>Contact Info</h3><p>training@switchtodevops.com</p><p>India Office</p><p>+91-9911670132</p><p>Bangalore, India (100% Online)</p><p>Live classes via Zoom</p></div>
-        <div><h3>Legal & Policies</h3><p>Home | About Us | Contact | Courses | Blogs | Learn | Privacy | Terms | Refunds | Shipping</p><p>Privacy Policy — Your data is safe · Terms & Conditions — Service terms · Refund Policy — 7-day guarantee</p><p>Get full refund within 7 days if not satisfied with the course content. We value your privacy. Your personal details are kept safe and never shared with third parties.</p><p>Operated by: Firoz Ahmed</p><p>Registered Address: No- 33 , 1st Floor, 1st Main, CBI Main Rd, HMT Layout, Bengaluru, Karnataka 560032</p><p>Email: Training@switchtodevops.com</p><p>GST not applicable – not registered under GST</p></div>
-        <div className="footer-bottom"><p>© 2026 SwitchtoDevOps Academy. All Rights Reserved.</p><p>Call Now · Chat on WhatsApp · Book Free Demo</p></div>
+
+      <footer className="site-footer" id="courses">
+        <div className="section-shell footer-grid">
+          <div className="footer-brand">
+            <a className="logo" href="#home">
+              <span className="logo-mark">
+                <Icon name="cloud" />
+              </span>
+              <span className="logo-text">
+                Switch to <em>DevOps</em>
+              </span>
+            </a>
+            <p>Code it. Deploy it. Own it. — career-ready DevOps training with real AWS projects.</p>
+          </div>
+          <div>
+            <h3>Quick Links</h3>
+            <a href="#courses">Courses</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#projects">Projects</a>
+            <a href="#stories">Success Stories</a>
+            <a href="#resources">Resources</a>
+          </div>
+          <div>
+            <h3>Connect</h3>
+            <a href={WHATSAPP} target="_blank" rel="noreferrer">
+              WhatsApp Mentor
+            </a>
+            <a href="tel:+919911670132">+91 99116 70132</a>
+            <a href="https://switchtodevops.com/" target="_blank" rel="noreferrer">
+              switchtodevops.com
+            </a>
+          </div>
+          <div className="socials">
+            <h3>Social</h3>
+            <div className="social-row">
+              <a href="https://www.youtube.com/" target="_blank" rel="noreferrer" aria-label="YouTube">
+                YT
+              </a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                in
+              </a>
+              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram">
+                IG
+              </a>
+              <a href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook">
+                f
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>© {new Date().getFullYear()} Switch to DevOps. All rights reserved.</p>
+        </div>
       </footer>
     </>
   );
