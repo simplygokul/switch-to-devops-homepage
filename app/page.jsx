@@ -22,11 +22,13 @@ const heroStats = [
 ];
 
 const mainStats = [
-  ['127+', 'Students Placed'],
-  ['₹18L', 'Avg Salary CTC'],
-  ['Up to 85%', 'Placement Rate'],
-  ['Max 10', 'Students/Batch'],
+  ['127+', 'Students Placed', 'users'],
+  ['₹18L', 'Avg Salary CTC', 'rupee'],
+  ['Up to 85%', 'Placement Rate', 'chart'],
+  ['Max 10', 'Students/Batch', 'batch'],
 ];
+
+const moduleIcons = ['linux', 'git', 'docker', 'k8s', 'terraform', 'ansible', 'jenkins', 'argo', 'monitor', 'aws'];
 
 const companies = [
   ['TCS', '12 LPA'],
@@ -218,6 +220,51 @@ function Arrow() {
   );
 }
 
+function StatIcon({ name }) {
+  const props = {
+    width: 22,
+    height: 22,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.8,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    'aria-hidden': true,
+  };
+  if (name === 'users') {
+    return (
+      <svg {...props}>
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    );
+  }
+  if (name === 'rupee') {
+    return (
+      <svg {...props}>
+        <path d="M6 5h12M6 10h12M6 5c4 0 6 2.5 6 5s-2 5-6 5h3l5 5" />
+      </svg>
+    );
+  }
+  if (name === 'chart') {
+    return (
+      <svg {...props}>
+        <path d="M4 19V5M4 19h16" />
+        <path d="M8 15l3-4 3 2 4-6" />
+      </svg>
+    );
+  }
+  return (
+    <svg {...props}>
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
 function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -303,68 +350,89 @@ function CommandCenter() {
 
   return (
     <div className="command-center" aria-label="Deployment Command Center">
-      <div className="cc-glow" aria-hidden />
-      <div className="cc-grid">
-        <article className="cc-terminal">
-          <header>
-            <span className="dot red" /><span className="dot yellow" /><span className="dot green" />
-            <p>pipeline.log</p>
-          </header>
-          <ul className="cc-lines desktop-only">
-            {desktopLines.map((line, i) => (
-              <li key={line} style={{ animationDelay: `${0.1 * i}s` }}>
-                <time>10:{String(24 + i).padStart(2, '0')}:3{i}</time>
-                <span className="ok">✓</span>
-                <code>{line}</code>
-              </li>
-            ))}
-          </ul>
-          <ul className="cc-lines mobile-only">
-            {mobileLines.map((line, i) => (
-              <li key={line} style={{ animationDelay: `${0.1 * i}s` }}>
-                <span className="ok">✓</span>
-                <code>{line}</code>
-              </li>
-            ))}
-          </ul>
-        </article>
+      <div className="cc-shell">
+        <div className="cc-shell-bar">
+          <span className="cc-live" aria-hidden />
+          <p>DEPLOYMENT COMMAND CENTER</p>
+          <span className="cc-shell-meta">prod · ap-south-1</span>
+        </div>
+        <div className="cc-grid">
+          <article className="cc-terminal">
+            <header>
+              <span className="dot red" /><span className="dot yellow" /><span className="dot green" />
+              <p>pipeline.log</p>
+            </header>
+            <ul className="cc-lines desktop-only">
+              {desktopLines.map((line, i) => (
+                <li key={line} style={{ animationDelay: `${0.12 * i}s` }}>
+                  <time>10:{String(24 + i).padStart(2, '0')}:3{i}</time>
+                  <span className="ok">✓</span>
+                  <code>{line}</code>
+                </li>
+              ))}
+            </ul>
+            <ul className="cc-lines mobile-only">
+              {mobileLines.map((line, i) => (
+                <li key={line} style={{ animationDelay: `${0.12 * i}s` }}>
+                  <span className="ok">✓</span>
+                  <code>{line}</code>
+                </li>
+              ))}
+            </ul>
+          </article>
 
-        <article className="cc-infra">
-          <p className="cc-label">Infrastructure Overview</p>
-          <div className="infra-map">
-            <div className="node nginx">Nginx<br />Load Balancer</div>
-            <div className="node-row">
-              <div className="node app">App Service</div>
-              <div className="node app">App Service</div>
+          <article className="cc-infra">
+            <p className="cc-label">Infrastructure Overview</p>
+            <div className="infra-map">
+              <div className="node nginx">Nginx<br /><small>Load Balancer</small></div>
+              <div className="infra-connector" aria-hidden />
+              <div className="node-row">
+                <div className="node app">App Service</div>
+                <div className="node app">App Service</div>
+              </div>
+              <div className="infra-connector split" aria-hidden />
+              <div className="node-row">
+                <div className="node redis">Redis<br /><small>Cache</small></div>
+                <div className="node pg">PostgreSQL<br /><small>DB</small></div>
+              </div>
             </div>
-            <div className="node-row">
-              <div className="node redis">Redis<br />Cache</div>
-              <div className="node pg">PostgreSQL<br />DB</div>
+          </article>
+
+          <article className="cc-metric health">
+            <div className="ring" aria-hidden>
+              <svg viewBox="0 0 36 36">
+                <path className="ring-bg" d="M18 2.5a15.5 15.5 0 1 1 0 31 15.5 15.5 0 1 1 0-31" />
+                <path className="ring-fg" d="M18 2.5a15.5 15.5 0 1 1 0 31 15.5 15.5 0 1 1 0-31" />
+              </svg>
+              <strong>100%</strong>
             </div>
-          </div>
-        </article>
+            <p>System Health</p>
+          </article>
 
-        <article className="cc-metric health">
-          <div className="ring" aria-hidden><strong>100%</strong></div>
-          <p>System Health</p>
-        </article>
+          <article className="cc-metric cpu">
+            <p className="cc-label">CPU Usage</p>
+            <svg className="spark" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden>
+              <defs>
+                <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="rgba(77,183,255,0.35)" />
+                  <stop offset="100%" stopColor="rgba(77,183,255,0)" />
+                </linearGradient>
+              </defs>
+              <path className="spark-fill" d="M0 28 C12 26, 18 10, 30 16 S48 34, 60 22 78 6, 90 14 108 30, 120 18 V40 H0 Z" />
+              <path className="spark-line" d="M0 28 C12 26, 18 10, 30 16 S48 34, 60 22 78 6, 90 14 108 30, 120 18" />
+            </svg>
+            <strong>23%</strong>
+          </article>
 
-        <article className="cc-metric cpu">
-          <p className="cc-label">CPU Usage</p>
-          <svg viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden>
-            <path d="M0 28 C12 26, 18 10, 30 16 S48 34, 60 22 78 6, 90 14 108 30, 120 18" />
-          </svg>
-          <strong>23%</strong>
-        </article>
-
-        <article className="cc-metric deploys">
-          <p className="cc-label">Deployments</p>
-          <div className="bars" aria-hidden>
-            <i style={{ height: '40%' }} /><i style={{ height: '65%' }} /><i style={{ height: '50%' }} />
-            <i style={{ height: '85%' }} /><i style={{ height: '70%' }} /><i className="active" style={{ height: '95%' }} />
-          </div>
-          <strong>24</strong>
-        </article>
+          <article className="cc-metric deploys">
+            <p className="cc-label">Deployments</p>
+            <div className="bars" aria-hidden>
+              <i style={{ '--h': '40%' }} /><i style={{ '--h': '65%' }} /><i style={{ '--h': '50%' }} />
+              <i style={{ '--h': '85%' }} /><i style={{ '--h': '70%' }} /><i className="active" style={{ '--h': '95%' }} />
+            </div>
+            <strong>24 <span>This Week</span></strong>
+          </article>
+        </div>
       </div>
     </div>
   );
@@ -402,6 +470,7 @@ export default function HomePage() {
           <div className="hero-atmosphere" aria-hidden />
           <div className="hero-inner">
             <div className="hero-copy">
+              <p className="brand-kicker">SwitchtoDevOps</p>
               <p className="eyebrow">BATCH STARTS JULY 12 · ONLY 3 SEATS LEFT</p>
               <h1>
                 Live DevOps Course —
@@ -440,10 +509,13 @@ export default function HomePage() {
         {/* STATS */}
         <section className="stats-bar" aria-label="Key outcomes">
           <div className="stats-track">
-            {mainStats.map(([value, label]) => (
-              <article key={label} className="stat-item">
-                <strong>{value}</strong>
-                <span>{label}</span>
+            {mainStats.map(([value, label, icon], index) => (
+              <article key={label} className={`stat-item tone-${index}`}>
+                <span className="stat-icon"><StatIcon name={icon} /></span>
+                <div>
+                  <strong>{value}</strong>
+                  <span>{label}</span>
+                </div>
               </article>
             ))}
           </div>
@@ -494,7 +566,10 @@ export default function HomePage() {
                   key={mod[0]}
                   onClick={() => setModuleIndex(index)}
                 >
-                  <div className="step-node"><span>{String(index + 1).padStart(2, '0')}</span></div>
+                  <div className={`step-node glyph-${moduleIcons[index]}`}>
+                    <i aria-hidden />
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                  </div>
                   <p>{mod[0]}</p>
                   <small>{mod[1]}</small>
                   {index < curriculum.length - 1 ? <span className="step-arrow" aria-hidden /> : null}
