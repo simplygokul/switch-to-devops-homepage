@@ -36,22 +36,22 @@ const benefits = [
   {
     title: 'Learn from an AWS DevOps Engineer with 6+ Years Industry Experience',
     copy: 'Your trainer is an active AWS DevOps Engineer at TCS with 6+ years of hands-on experience deploying real production systems — not a full-time instructor reading slides.',
-    image: assetPath('/assets/homepage.webp'),
+    tag: 'PRODUCTION MENTORSHIP',
   },
   {
     title: 'Only 10 Students Per Batch – Guaranteed Personal Attention',
     copy: 'We cap every batch at 10 students so you are never lost in a crowd. Every doubt gets answered, every concept gets reinforced, and your progress is tracked individually.',
-    image: assetPath('/assets/hero.webp'),
+    tag: 'SMALL BATCH SYSTEM',
   },
   {
     title: 'Build Real Projects, Not Follow-Along Tutorials',
     copy: 'You will architect and deploy end-to-end systems on live AWS infrastructure — CI/CD pipelines, EKS clusters, Terraform modules — the kind of work that impresses interviewers.',
-    image: assetPath('/assets/og.webp'),
+    tag: 'LIVE AWS PROJECTS',
   },
   {
     title: 'Live Interactive Classes with Lifetime Recording Access',
     copy: 'Every session is live, interactive and recorded. Missed a class or want to revise before an interview? Access every recording forever at no extra charge.',
-    image: assetPath('/assets/hero-mobile.webp'),
+    tag: 'LIVE + RECORDED',
   },
 ];
 
@@ -296,8 +296,8 @@ export default function HomePage() {
           <div className="benefit-layout">
             {benefits.map((benefit, index) => (
               <article className="benefit-card" key={benefit.title}>
-                <img src={benefit.image} alt="" />
                 <span>{String(index + 1).padStart(2, '0')}</span>
+                <small>{benefit.tag}</small>
                 <h3>{benefit.title}</h3>
                 <p>{benefit.copy}</p>
               </article>
