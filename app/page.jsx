@@ -488,6 +488,7 @@ export default function HomePage() {
               <p className="eyebrow">Your Learning Journey</p>
               <h2>8 Weeks. 8 Powerful Modules.</h2>
             </div>
+            <p className="roadmap-hint">Swipe to explore all 8 modules →</p>
             <div className="roadmap-rail" role="list">
               {modules.map((mod, index) => (
                 <div className="roadmap-step" role="listitem" key={mod.n}>
