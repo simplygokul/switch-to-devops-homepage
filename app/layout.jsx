@@ -14,9 +14,8 @@ const body = Plus_Jakarta_Sans({
 });
 
 export const metadata = {
-  title: 'Switch to DevOps | Code It. Deploy It. Own It.',
-  description:
-    'Master in-demand DevOps skills through real-world projects, hands-on training and expert mentorship.',
+  title: 'SwitchtoDevOps',
+  description: 'Live DevOps Course — Get Hired as a DevOps Engineer',
 };
 
 export default function RootLayout({ children }) {
