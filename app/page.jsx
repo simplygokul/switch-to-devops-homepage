@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react';
 
 const navItems = ['Home', 'Courses', 'Blog', 'Learn', 'Contact'];
+const basePath = process.env.NODE_ENV === 'production' ? '/switch-to-devops-homepage' : '';
+const assetPath = (path) => `${basePath}${path}`;
 
 const heroStats = [
   ['127+', 'Placed'],
@@ -34,22 +36,22 @@ const benefits = [
   {
     title: 'Learn from an AWS DevOps Engineer with 6+ Years Industry Experience',
     copy: 'Your trainer is an active AWS DevOps Engineer at TCS with 6+ years of hands-on experience deploying real production systems — not a full-time instructor reading slides.',
-    image: '/assets/homepage.webp',
+    image: assetPath('/assets/homepage.webp'),
   },
   {
     title: 'Only 10 Students Per Batch – Guaranteed Personal Attention',
     copy: 'We cap every batch at 10 students so you are never lost in a crowd. Every doubt gets answered, every concept gets reinforced, and your progress is tracked individually.',
-    image: '/assets/hero.webp',
+    image: assetPath('/assets/hero.webp'),
   },
   {
     title: 'Build Real Projects, Not Follow-Along Tutorials',
     copy: 'You will architect and deploy end-to-end systems on live AWS infrastructure — CI/CD pipelines, EKS clusters, Terraform modules — the kind of work that impresses interviewers.',
-    image: '/assets/og.webp',
+    image: assetPath('/assets/og.webp'),
   },
   {
     title: 'Live Interactive Classes with Lifetime Recording Access',
     copy: 'Every session is live, interactive and recorded. Missed a class or want to revise before an interview? Access every recording forever at no extra charge.',
-    image: '/assets/hero-mobile.webp',
+    image: assetPath('/assets/hero-mobile.webp'),
   },
 ];
 
@@ -369,7 +371,7 @@ export default function HomePage() {
             <div className="button-row"><a className="solid-button" href="#contact">Start Your Journey Today</a><a className="outline-button" href="#courses">View DevOps Roadmap</a></div>
           </div>
           <div className="trainer-panel">
-            <img src="/assets/mentor7.jpeg" alt="Firoz Ahmed" />
+            <img src={assetPath('/assets/mentor7.jpeg')} alt="Firoz Ahmed" />
             <div>
               <p className="eyebrow">Your Trainer</p>
               <h2>Meet Your DevOps Trainer</h2>
