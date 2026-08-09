@@ -68,10 +68,7 @@ function Header() {
         <a href="#learn" onClick={() => setMenuOpen(false)}>Learn</a>
       </nav>
       <div className="header-actions">
-        <a className="whatsapp-button" href="https://wa.me/919911670132" aria-label="Chat with us on WhatsApp">
-          <span aria-hidden="true">WA</span>
-          <span className="whatsapp-label">WhatsApp</span>
-        </a>
+        <a className="phone-link" href="tel:+919911670132">+91-9911670132</a>
         <ThemeToggle />
       </div>
     </header>
@@ -85,7 +82,7 @@ export default function HomePage() {
       <Header />
 
       <main>
-        <section className="hero section-shell" id="home">
+        <section className="hero command-hero section-shell" id="home">
           <div className="concept-stamp hero-stamp">Working Concept — Saradhi Tech</div>
           <div className="hero-copy">
             <div className="eyebrow">BATCH STARTS JULY 12 · ONLY 3 SEATS LEFT</div>
@@ -104,12 +101,23 @@ export default function HomePage() {
             <p className="fine-print">Course fee from ₹15,000 · EMI available · GenAI included</p>
             <p className="fine-print">Free demo · No payment required · Cancel anytime</p>
           </div>
-          <div className="hero-visual" aria-hidden="true">
-            <div className="orbital"><span></span><span></span><span></span><span></span><span></span><span></span><div className="loop"></div><div className="core-pulse"></div></div>
+          <div className="hero-visual command-center" aria-hidden="true">
+            <div className="terminal-panel">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div className="infra-panel">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div className="monitor-panel">
+              <span></span><span></span><span></span>
+            </div>
+            <div className="pipeline-dock">
+              <span></span><span></span><span></span><span></span>
+            </div>
           </div>
         </section>
 
-        <section className="section-shell">
+        <section className="company-section section-shell">
           <div className="section-heading compact">
             <h2>Our Students Are Hired At — With Real Salary Packages</h2>
           </div>
@@ -120,14 +128,14 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="stats-grid section-shell" aria-label="Placement highlights">
+        <section className="stats-grid metrics-strip section-shell" aria-label="Placement highlights">
           <article className="stat-card"><strong>127+</strong><span>Students Placed</span></article>
           <article className="stat-card"><strong>₹18L</strong><span>Avg Salary CTC</span></article>
           <article className="stat-card"><strong>Up to 85%</strong><span>Placement Rate</span></article>
           <article className="stat-card"><strong>Max 10</strong><span>Students/Batch</span></article>
         </section>
 
-        <section className="section-shell" id="about-us">
+        <section className="benefits-section section-shell" id="about-us">
           <div className="section-heading">
             <div className="section-kicker">Why Choose Us</div>
             <h2>Why Choose SwitchToDevOps for Your DevOps Career</h2>
@@ -141,7 +149,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="section-shell" id="curriculum">
+        <section className="roadmap-section section-shell" id="curriculum">
           <div className="section-heading">
             <div className="section-kicker">Curriculum</div>
             <h2>DevOps Course Curriculum</h2>
@@ -162,7 +170,7 @@ export default function HomePage() {
           <div className="center-cta"><a className="secondary-button" href="#curriculum">View Full DevOps Roadmap</a></div>
         </section>
 
-        <section className="section-shell" id="courses">
+        <section className="projects-section section-shell" id="courses">
           <div className="section-heading">
             <div className="section-kicker">Real Projects</div>
             <h2>Hands-On DevOps Projects You Will Build During the Course</h2>
@@ -178,7 +186,7 @@ export default function HomePage() {
           <div className="center-cta"><a className="secondary-button" href="#courses">How DevOps Scales Real Production Systems</a></div>
         </section>
 
-        <section className="section-shell">
+        <section className="tools-section section-shell">
           <div className="section-heading">
             <div className="section-kicker">Tools</div>
             <h2>DevOps Tools Covered in This Course</h2>
@@ -190,7 +198,7 @@ export default function HomePage() {
           <div className="center-cta"><a className="secondary-button" href="#curriculum">See Which Tools to Learn First</a></div>
         </section>
 
-      <section className="split-section section-shell">
+      <section className="mentor-section split-section section-shell">
           <div className="concept-stamp">Working Concept — Saradhi Tech</div>
           <div>
             <div className="section-kicker">Industry-Ready DevOps Training</div>
@@ -205,7 +213,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="section-shell">
+        <section className="trainer-proof-section section-shell">
           <div className="course-grid trainer-facts">
             <article className="course-card"><h3>Firoz Ahmed</h3><p>AWS DevOps Engineer</p><p>TCS · 6+ Years Experience</p><p>EKS ArgoCD Terraform Aurora MySQL MSK Kafka</p></article>
             <article className="course-card"><h3>6+ Years as AWS DevOps Engineer at TCS</h3><p>Not a full-time trainer — an active engineer who works with production AWS infrastructure daily and brings current, real-world knowledge to every class.</p></article>
@@ -215,7 +223,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="section-shell">
+        <section className="process-section section-shell">
           <div className="section-heading"><div className="section-kicker">How It Works</div><h2>How Our Small Batch DevOps Training Works</h2><p>A structured 8-week programme designed so no student gets left behind</p></div>
           <div className="why-grid">
             <article className="feature-card"><span className="icon-mark">10 students max</span><h3>Maximum 10 students Per Batch</h3><p>Every batch is hard-capped at 10 students. This is not a marketing claim — it is how we maintain quality. Small batches mean the trainer knows your name, your background, and your weak spots.</p></article>
@@ -226,7 +234,7 @@ export default function HomePage() {
           <div className="center-cta"><a className="primary-button" href="#contact-us">Book a Free Demo Class</a><a className="secondary-button" href="#learn">Is DevOps a Good Career?</a></div>
         </section>
 
-        <section className="section-shell">
+        <section className="career-section section-shell">
           <div className="section-heading"><div className="section-kicker">Career Paths</div><h2>DevOps Engineer Salary and Career Opportunities</h2><p>DevOps is one of the highest-paying engineering disciplines in India — here is what you can earn</p></div>
           <div className="course-grid">
             <article className="course-card"><h3>DevOps Engineer – Average Salary and Job Roles</h3><strong>8 – 22 LPA</strong><p>The most in-demand role in the industry. DevOps Engineers build and maintain CI/CD pipelines, manage cloud infrastructure and own the reliability of production deployments. Entry-level roles start at 8 LPA; senior engineers with AWS/Kubernetes expertise command 18–22 LPA.</p><p>TCS Infosys Wipro Flipkart Razorpay</p></article>
@@ -238,7 +246,7 @@ export default function HomePage() {
           <div className="center-cta"><a className="secondary-button" href="#blogs">Read Full DevOps Salary Guide 2026</a></div>
         </section>
 
-        <section className="section-shell">
+        <section className="testimonial-section section-shell">
           <div className="section-heading"><h2>What Our Students Say About This DevOps Course</h2><p>Real stories from real alumni — watch their journey</p></div>
           <div className="testimonial-grid">
             <article className="testimonial-card"><p>&quot;मतलब ज़ीरो से एक तरीके से उठाया है। तो हर एक चीज़ के लिए&quot;</p><strong>Student Testimonial</strong><span>Before</span><span>Career Transition</span><span>Now</span><span>DevOps Professional</span><b>10+ LPA</b></article>
@@ -246,7 +254,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="section-shell" id="placements">
+        <section className="results-section section-shell" id="placements">
           <div className="section-heading"><div className="section-kicker">Student Transformations</div><h2>Real Students. Real Salaries.</h2><p>Every card below is a real career transformation — before and after joining SwitchToDevOps</p></div>
           <div className="course-grid transformation-grid">
             <article className="course-card"><span>PP</span><p>Batch 12</p><h3>Priya Patel</h3><p>Cloud DevOps Engineer · Flipkart</p><p>Before</p><strong>4.5 LPA</strong><p>Support Engineer</p><p>→</p><p>After</p><strong>22 LPA</strong><p>Flipkart</p></article>
@@ -258,7 +266,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="section-shell" id="pricing">
+        <section className="pricing-section section-shell" id="pricing">
           <div className="section-heading"><div className="section-kicker">PRICING</div><h2>DevOps Course Fee, Duration and Batch Details</h2><p>Transparent pricing with no hidden fees — pick the level that matches your goals</p></div>
           <div className="course-grid pricing-grid">
             <article className="course-card"><span className="section-kicker">FOUNDATION</span><h3>Course Duration and Weekly Schedule – L1</h3><p>Beginners · 40 hours · Weekend batches (Sat + Sun)</p><strong>15,000</strong><ul><li>Linux Administration & Shell Scripting</li><li>Git & Version Control (GitHub, GitLab)</li><li>Docker Basics & Containerization</li><li>CI/CD Fundamentals with Jenkins</li><li>AWS Basics (EC2, S3, IAM)</li><li>Basic Networking & Security</li><li>Hands-on labs included</li><li>Course completion certificate</li><li>Placement assistance</li></ul><a href="#contact-us">Enroll in L1</a><p>Entry-level DevOps roles (4-8 LPA)</p></article>
@@ -268,7 +276,7 @@ export default function HomePage() {
           <div className="mini-stats benefit-strip"><span><strong>EMI Available</strong>Pay in easy installments</span><span><strong>Money-Back Guarantee</strong>100% refund within first week</span><span><strong>Limited Batch Size</strong>Only 10 students per batch</span><span><strong>Referral Bonus</strong>2,000 off for both referrer & referee</span></div>
         </section>
 
-      <section className="contact-section section-shell" id="contact-us">
+      <section className="demo-section contact-section section-shell" id="contact-us">
           <div className="concept-stamp">Working Concept — Saradhi Tech</div>
           <div>
             <div className="section-kicker">LIMITED SEATS AVAILABLE</div>
@@ -289,7 +297,7 @@ export default function HomePage() {
           </form>
         </section>
 
-        <section className="section-shell faq-section">
+        <section className="faq-section section-shell">
           <div className="section-heading"><div className="section-kicker">FAQ</div><h2>Frequently Asked Questions About DevOps Training</h2><p>Everything you need to know before enrolling</p></div>
           <div className="faq-list">
             <FaqItem question="Why do you only accept 10 students per batch?" defaultOpen>We deliberately keep batches small because DevOps requires hands-on practice and personalized feedback. With 10 students, I can review every student&apos;s Terraform code, debug their Kubernetes deployments in real-time, and provide specific career guidance based on their background. Large institutes run 30-40 student batches where you&apos;re just a number. Here, I know each student&apos;s strengths and weak areas by week 2. That&apos;s why our placement rate is up to 85% — personalized attention works.</FaqItem>
@@ -306,7 +314,7 @@ export default function HomePage() {
           <div className="center-cta"><h3>Still have questions?</h3><p>Our team is here to help you make the right decision</p><a className="primary-button" href="#contact-us">Chat with us on WhatsApp</a></div>
         </section>
 
-        <section className="section-shell" id="learn">
+        <section className="resource-section section-shell" id="learn">
           <div className="section-heading"><div className="section-kicker">Keep Exploring</div><h3>Explore More DevOps Resources</h3></div>
           <div className="three-column">
             <article className="panel"><h4>DevOps Courses by Location</h4><p>DevOps Course in Bangalore</p><p>Popular</p><p>Whitefield, Koramangala, Electronic City</p><p>DevOps Course in Mumbai</p><p>BFSI & fintech focus · BKC, Powai, Andheri</p><p>DevOps Course in Hyderabad</p><p>HITEC City, Gachibowli, Financial District</p><p>DevOps Course in Pune</p><p>Hinjewadi, Kharadi, Baner product hubs</p><p>DevOps Course in Chennai</p><p>OMR SaaS belt, Guindy, Ambattur</p><p>DevOps Course in Delhi NCR</p><p>Gurgaon, Noida, South Delhi</p><p>DevOps Course in Kolkata</p><p>Salt Lake Sector V, New Town</p></article>
@@ -316,7 +324,7 @@ export default function HomePage() {
           <div className="center-cta"><a className="primary-button" href="#contact-us">Enroll in DevOps Course Now</a></div>
         </section>
 
-        <section className="section-shell" id="blogs">
+        <section className="blog-section section-shell" id="blogs">
           <div className="section-heading"><p>Stay updated with the latest trends, tips, and insights from our experts</p><h2>Latest From Our Blog</h2></div>
           <div className="course-grid blog-grid">
             <article className="course-card"><span>Featured</span><p>Career Guide</p><h3>DevOps Roadmap for Freshers 2026: Step-by-Step Guide</h3><p>DevOps Roadmap for Freshers 2026: Step-by-Step Guide</p><p>20 Mar 2026</p><p>RRavi Shankar</p></article>
